@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Level 2 - Digital Escape Room</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🔎 LEVEL 2</h1>
+
+        <h2>THE HIDDEN CLUE</h2>
+
+        <h3>
+            ⏱️ Time Left:
+            <span id="timer">03:00</span>
+        </h3>
+
+        <p>
+            Something in this room is hiding a clue.
+        </p>
+
+        <p>
+            Find the correct object!
+        </p>
+
+
+        <div class="objects">
+
+            <button class="object"
+                    onclick="findClue('computer')">
+
+                💻
+                <br>
+                Computer
+
+            </button>
+
+
+            <button class="object"
+                    onclick="findClue('book')">
+
+                📚
+                <br>
+                Books
+
+            </button>
+
+
+            <button class="object"
+                    onclick="findClue('box')">
+
+                📦
+                <br>
+                Box
+
+            </button>
+
+
+            <button class="object"
+                    onclick="findClue('lamp')">
+
+                💡
+                <br>
+                Lamp
+
+            </button>
+
+        </div>
+
+
+        <div id="clue" style="display: none;">
+
+            <h3>🔓 You Found Something!</h3>
+
+            <p>
+                A hidden note was inside the box.
+            </p>
+
+            <p>
+                <strong>CLUE: 119</strong>
+            </p>
+
+            <p>
+                Enter the 3-digit code:
+            </p>
+
+            <input
+                type="number"
+                id="code"
+                placeholder="Enter code"
+            >
+
+            <br>
+
+            <button id="checkCodeBtn">
+                CHECK CODE
+            </button>
+
+            <p id="message"></p>
+
+            <button id="nextBtn" style="display: none;">
+                NEXT LEVEL →
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function findClue(object) {
+
+            if (object === "box") {
+
+                document.getElementById("clue").style.display =
+                    "block";
+
+            } else {
+
+                alert("❌ Nothing here! Keep searching.");
+
+            }
+
+        }
+
+        const checkCodeButton =
+            document.getElementById("checkCodeBtn");
+
+        const nextButton =
+            document.getElementById("nextBtn");
+
+
+        checkCodeButton.addEventListener("click", function() {
+
+            const code =
+                document.getElementById("code").value.trim();
+
+
+            if (code === "119") {
+
+                document.getElementById("message").textContent =
+                    "✅ Correct! You found the secret code.";
+
+                nextButton.style.display =
+                    "inline-block";
+
+            } else {
+
+                document.getElementById("message").textContent =
+                    "❌ Wrong code. Try again!";
+
+                nextButton.style.display =
+                    "none";
+
+            }
+
+        });
+
+
+        nextButton.addEventListener("click", function() {
+
+            window.location.href = "level3.html";
+
+        });
+
+        let endTime =
+            localStorage.getItem("escapeEndTime");
+
+
+        if (!endTime) {
+
+            endTime =
+                Date.now() + (3 * 60 * 1000);
+
+            localStorage.setItem(
+                "escapeEndTime",
+                endTime
+            );
+
+        }
+
+
+        const timer =
+            setInterval(function() {
+
+                const remaining =
+                    Number(endTime) - Date.now();
+
+
+                if (remaining <= 0) {
+
+                    clearInterval(timer);
+
+                    document.getElementById("timer").textContent =
+                        "00:00";
+
+                    localStorage.removeItem(
+                        "escapeEndTime"
+                    );
+
+                    alert(
+                        "⏰ Time's up! Game Over!"
+                    );
+
+                    window.location.href =
+                        "index.html";
+
+                    return;
+
+                }
+
+
+                const minutes =
+                    Math.floor(
+                        remaining / 60000
+                    );
+
+
+                const seconds =
+                    Math.floor(
+                        (remaining % 60000) / 1000
+                    );
+
+
+                document.getElementById("timer").textContent =
+                    String(minutes).padStart(2, "0") +
+                    ":" +
+                    String(seconds).padStart(2, "0");
+
+
+            }, 1000);
+
+    </script>
+
+</body>
+
+</html>

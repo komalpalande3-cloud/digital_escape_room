@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Level 3 - Final Code</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>💻 LEVEL 3</h1>
+
+        <h2>THE FINAL CODE</h2>
+
+        <h3>⏱️ Time Left: <span id="timer">03:00</span></h3>
+
+        <p>
+            You have reached the final security system.
+        </p>
+
+        <p>
+            The system is locked.
+        </p>
+
+        <h3>🔒 SYSTEM LOCKED</h3>
+
+        <p>
+            Enter the final password to escape:
+        </p>
+
+        <input
+            type="text"
+            id="password"
+            placeholder="Enter password"
+        >
+
+        <br>
+
+        <button onclick="checkPassword()">
+            ACCESS SYSTEM
+        </button>
+
+        <p id="message"></p>
+
+    </div>
+
+
+    <script>
+
+        function checkPassword() {
+
+            const password =
+                document.getElementById("password").value
+                .trim()
+                .toLowerCase();
+
+
+            if (password === "escape") {
+
+                document.getElementById("message").textContent =
+                    "🎉 ACCESS GRANTED! You escaped!";
+
+                localStorage.removeItem("escapeEndTime");
+            }
+
+            else {
+
+                document.getElementById("message").textContent =
+                    "❌ ACCESS DENIED! Try again.";
+
+            }
+
+        }
+        let endTime = localStorage.getItem("escapeEndTime");
+
+if (!endTime) {
+    endTime = Date.now() + (3 * 60 * 1000);
+    localStorage.setItem("escapeEndTime", endTime);
+}
+
+const timer = setInterval(function() {
+
+    const remaining = Number(endTime) - Date.now();
+
+    if (remaining <= 0) {
+
+        clearInterval(timer);
+
+        document.getElementById("timer").textContent = "00:00";
+
+        localStorage.removeItem("escapeEndTime");
+
+        alert("⏰ Time's up! Game Over!");
+
+        window.location.href = "index.html";
+
+        return;
+    }
+
+    const minutes = Math.floor(remaining / 60000);
+    const seconds = Math.floor((remaining % 60000) / 1000);
+
+    document.getElementById("timer").textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+
+    }, 1000);
+
+    </script>
+
+</body>
+
+</html>
