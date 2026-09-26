@@ -57,10 +57,19 @@
 
        if (answer === "future") {
 
-        message.textContent =
-            "✅ Correct! The door is unlocked.";
+    let score =
+        Number(localStorage.getItem("score")) || 0;
 
-        nextButton.style.display = "inline-block";
+    score += 100;
+
+    localStorage.setItem("score", score);
+
+    message.textContent =
+        "✅ Correct! +100 points";
+
+    nextButton.style.display =
+        "inline-block";
+
 
         } else {
 
@@ -68,6 +77,8 @@
             "❌ Wrong answer. Try again!";
 
         nextButton.style.display = "none";
+        
+         checkButton.disabled = true;
 
     }
 

@@ -151,11 +151,20 @@
 
             if (code === "119") {
 
-                document.getElementById("message").textContent =
-                    "✅ Correct! You found the secret code.";
+            let score =
+               Number(localStorage.getItem("score")) || 0;
 
-                nextButton.style.display =
-                    "inline-block";
+            score += 150;
+
+             localStorage.setItem("score", score);
+
+            document.getElementById("message").textContent =
+              "✅ Correct! +150 points";
+
+            nextButton.style.display =
+            "inline-block"
+
+            checkCodeButton.disabled = true;
 
             } else {
 

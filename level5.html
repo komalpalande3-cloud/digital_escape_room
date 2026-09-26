@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Level 5 - Final Server</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🔐 LEVEL 5</h1>
+
+        <h2>THE FINAL SERVER</h2>
+
+        <h3>
+            ⏱️ Time Left:
+            <span id="timer">03:00</span>
+        </h3>
+
+        <p>
+            You have reached the final server.
+        </p>
+
+        <p>
+            Solve the final challenge to escape!
+        </p>
+             <div id="challenge">
+
+    <h3>🧩 THE FINAL PUZZLE</h3>
+
+    <p>
+        The server has hidden the final access code.
+    </p>
+
+    <p>
+        Solve all four clues to discover it.
+    </p>
+
+    <hr>
+
+    <p>
+        🔹 Clue 1:
+        How many levels you played in this escape room?
+    </p>
+
+    <input
+        type="number"
+        id="clue1"
+        placeholder="Answer"
+    >
+
+    <p>
+        🔹 Clue 2:
+        How many symbols were shown in the Memory Hack?
+    </p>
+
+    <input
+        type="number"
+        id="clue2"
+        placeholder="Answer"
+    >
+
+    <p>
+        🔹 Clue 3:
+        How many letters are in the word "CODE"?
+    </p>
+
+    <input
+        type="number"
+        id="clue3"
+        placeholder="Answer"
+    >
+
+    <p>
+        🔹 Clue 4:
+        How many riddles did you solve ?
+    </p>
+
+    <input
+        type="number"
+        id="clue4"
+        placeholder="Answer"
+    >
+
+    <br>
+
+    <button id="unlockBtn">
+        🔓 UNLOCK SERVER
+    </button>
+
+</div>
+             
+        <p id="message"></p>
+
+          <div id="victory" style="display: none;">
+
+    <h1>🏆 YOU ESCAPED!</h1>
+
+    <h2>THE SERVER HAS BEEN UNLOCKED</h2>
+
+    <p>
+        🎉 Congratulations!
+    </p>
+
+    <p>
+        You successfully completed all 5 levels.
+    </p>
+
+    <div class="score-box">
+
+        <p>⭐ FINAL SCORE</p>
+
+        <h1 id="finalScore">0</h1>
+
+        <p>OUT OF 1250 POINTS</p>
+
+    </div>
+
+    <button id="playAgainBtn">
+        🔄 PLAY AGAIN
+    </button>
+
+    <button id="homeBtn">
+        🏠 HOME
+    </button>
+
+</div>
+    </div>
+
+    <script>
+    
+const correctAnswers = {
+    clue1: 5,
+    clue2: 4,
+    clue3: 4,
+    clue4: 1
+};
+
+const unlockButton =
+    document.getElementById("unlockBtn");
+
+const message =
+    document.getElementById("message");
+
+const victory =
+    document.getElementById("victory");
+
+const finalScore =
+    document.getElementById("finalScore");
+
+
+unlockButton.addEventListener("click", function() {
+
+    const answer1 =
+        Number(document.getElementById("clue1").value);
+
+    const answer2 =
+        Number(document.getElementById("clue2").value);
+
+    const answer3 =
+        Number(document.getElementById("clue3").value);
+
+    const answer4 =
+        Number(document.getElementById("clue4").value);
+
+
+    if (
+        answer1 === correctAnswers.clue1 &&
+        answer2 === correctAnswers.clue2 &&
+        answer3 === correctAnswers.clue3 &&
+        answer4 === correctAnswers.clue4
+    ) {
+
+        const finalCode =
+            "" + answer1 + answer2 + answer3 + answer4;
+
+
+        message.textContent =
+            "🔓 ACCESS GRANTED! Final Code: " + finalCode;
+
+        let score =
+            Number(localStorage.getItem("score")) || 0;
+        score += 500;
+
+        localStorage.setItem("score", score);
+
+        finalScore.textContent = score;
+
+        victory.style.display = "block";
+        
+        clearInterval(timer);
+
+
+        localStorage.removeItem("escapeEndTime");
+
+
+
+        document.getElementById("challenge").style.display =
+            "none";
+
+
+    } else {
+
+        message.textContent =
+            "❌ One or more clues are incorrect. Try again!";
+
+    }
+
+});
+
+
+let endTime =
+    localStorage.getItem("escapeEndTime");
+
+if (!endTime) {
+
+    endTime =
+        Date.now() + (3 * 60 * 1000);
+
+    localStorage.setItem(
+        "escapeEndTime",
+        endTime
+    );
+
+}
+
+
+const timer =
+    setInterval(function() {
+
+        const remaining =
+            Number(endTime) - Date.now();
+
+
+        if (remaining <= 0) {
+
+            clearInterval(timer);
+
+            document.getElementById("timer").textContent =
+                "00:00";
+
+            localStorage.removeItem(
+                "escapeEndTime"
+            );
+
+            alert("⏰ Time's up! Game Over!");
+
+            window.location.href =
+                "index.html";
+
+            return;
+
+        }
+
+
+        const minutes =
+            Math.floor(remaining / 60000);
+
+        const seconds =
+            Math.floor(
+                (remaining % 60000) / 1000
+            );
+
+
+        document.getElementById("timer").textContent =
+            String(minutes).padStart(2, "0") +
+            ":" +
+            String(seconds).padStart(2, "0");
+
+
+    }, 1000);
+
+document.getElementById("playAgainBtn")
+    .addEventListener("click", function() {
+
+        localStorage.setItem("score", "0");
+
+        localStorage.removeItem("escapeEndTime");
+
+        window.location.href = "level1.html";
+
+    });
+
+
+document.getElementById("homeBtn")
+    .addEventListener("click", function() {
+
+        localStorage.setItem("score", "0");
+
+        localStorage.removeItem("escapeEndTime");
+
+        window.location.href = "index.html";
+
+    });
+    </script>
+
+
+</body>
+
+</html>

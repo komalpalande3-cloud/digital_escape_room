@@ -8,7 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Level 3 - Final Code</title>
+    <title>Level 3 - Code Breaker</title>
 
     <link rel="stylesheet" href="style.css">
 
@@ -18,103 +18,206 @@
 
     <div class="container">
 
-        <h1>💻 LEVEL 3</h1>
+        <h1>🔢 LEVEL 3</h1>
 
-        <h2>THE FINAL CODE</h2>
+        <h2>THE CODE BREAKER</h2>
 
-        <h3>⏱️ Time Left: <span id="timer">03:00</span></h3>
+        <h3>
+            ⏱️ Time Left:
+            <span id="timer">03:00</span>
+        </h3>
 
         <p>
-            You have reached the final security system.
+            The server has generated a secret number sequence.
         </p>
 
         <p>
-            The system is locked.
+            Find the missing number to unlock the next level.
         </p>
 
-        <h3>🔒 SYSTEM LOCKED</h3>
-
-        <p>
-            Enter the final password to escape:
-        </p>
+        <div id="sequence"></div>
 
         <input
-            type="text"
-            id="password"
-            placeholder="Enter password"
+            type="number"
+            id="answer"
+            placeholder="Enter missing number"
         >
 
         <br>
 
-        <button onclick="checkPassword()">
-            ACCESS SYSTEM
+        <button id="checkBtn">
+            🔓 BREAK THE CODE
         </button>
 
         <p id="message"></p>
+
+        <button id="nextBtn" style="display: none;">
+            NEXT LEVEL →
+        </button>
 
     </div>
 
 
     <script>
 
-        function checkPassword() {
 
-            const password =
-                document.getElementById("password").value
-                .trim()
-                .toLowerCase();
+        const puzzles = [
 
+            {
+                sequence: [2, 4, 6, 8],
+                answer: 10
+            },
 
-            if (password === "escape") {
+            {
+                sequence: [3, 6, 12, 24],
+                answer: 48
+            },
 
-                document.getElementById("message").textContent =
-                    "🎉 ACCESS GRANTED! You escaped!";
+            {
+                sequence: [5, 10, 15, 20],
+                answer: 25
+            },
 
-                localStorage.removeItem("escapeEndTime");
+            {
+                sequence: [1, 4, 7, 10],
+                answer: 13
             }
 
-            else {
+        ];
 
-                document.getElementById("message").textContent =
-                    "❌ ACCESS DENIED! Try again.";
+
+        const randomIndex =
+            Math.floor(Math.random() * puzzles.length);
+
+        const puzzle =
+            puzzles[randomIndex];
+
+
+
+        document.getElementById("sequence").textContent =
+            puzzle.sequence.join("  →  ") + "  →  ?";
+
+
+        const checkButton =
+            document.getElementById("checkBtn");
+
+        const nextButton =
+            document.getElementById("nextBtn");
+
+        const message =
+            document.getElementById("message");
+
+
+        checkButton.addEventListener("click", function() {
+
+            const userAnswer =
+                Number(
+                    document.getElementById("answer").value
+                );
+
+
+            if (userAnswer === puzzle.answer) {
+
+                message.textContent =
+                    "🎉 Correct! Code broken! +200 points";
+
+                // Add score
+
+                let score =
+                    Number(localStorage.getItem("score")) || 0;
+
+                score += 200;
+
+                localStorage.setItem("score", score);
+
+
+                nextButton.style.display =
+                    "inline-block";
+
+                checkButton.disabled = true;
+
+            } else {
+
+                message.textContent =
+                    "❌ Incorrect! Try again.";
 
             }
+
+        });
+
+        nextButton.addEventListener("click", function() {
+
+            window.location.href = "level4.html";
+
+        });
+
+
+        let endTime =
+            localStorage.getItem("escapeEndTime");
+
+
+        if (!endTime) {
+
+            endTime =
+                Date.now() + (3 * 60 * 1000);
+
+            localStorage.setItem(
+                "escapeEndTime",
+                endTime
+            );
 
         }
-        let endTime = localStorage.getItem("escapeEndTime");
 
-if (!endTime) {
-    endTime = Date.now() + (3 * 60 * 1000);
-    localStorage.setItem("escapeEndTime", endTime);
-}
 
-const timer = setInterval(function() {
+        const timer =
+            setInterval(function() {
 
-    const remaining = Number(endTime) - Date.now();
+                const remaining =
+                    Number(endTime) - Date.now();
 
-    if (remaining <= 0) {
 
-        clearInterval(timer);
+                if (remaining <= 0) {
 
-        document.getElementById("timer").textContent = "00:00";
+                    clearInterval(timer);
 
-        localStorage.removeItem("escapeEndTime");
+                    document.getElementById("timer").textContent =
+                        "00:00";
 
-        alert("⏰ Time's up! Game Over!");
+                    localStorage.removeItem(
+                        "escapeEndTime"
+                    );
 
-        window.location.href = "index.html";
+                    alert(
+                        "⏰ Time's up! Game Over!"
+                    );
 
-        return;
-    }
+                    window.location.href =
+                        "index.html";
 
-    const minutes = Math.floor(remaining / 60000);
-    const seconds = Math.floor((remaining % 60000) / 1000);
+                    return;
 
-    document.getElementById("timer").textContent =
-        String(minutes).padStart(2, "0") + ":" +
-        String(seconds).padStart(2, "0");
+                }
 
-    }, 1000);
+
+                const minutes =
+                    Math.floor(
+                        remaining / 60000
+                    );
+
+
+                const seconds =
+                    Math.floor(
+                        (remaining % 60000) / 1000
+                    );
+
+
+                document.getElementById("timer").textContent =
+                    String(minutes).padStart(2, "0") +
+                    ":" +
+                    String(seconds).padStart(2, "0");
+
+
+            }, 1000);
 
     </script>
 

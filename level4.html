@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Level 4 - Memory Hack</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🧠 LEVEL 4</h1>
+
+        <h2>THE MEMORY HACK</h2>
+
+        <h3>
+            ⏱️ Time Left:
+            <span id="timer">03:00</span>
+        </h3>
+
+        <p>
+            Memorize the sequence of symbols.
+        </p>
+
+        <p>
+            You will have a few seconds to remember it.
+        </p>
+
+        <div id="sequence"></div>
+
+        <p id="status">
+            Get ready...
+        </p>
+
+        <div id="buttons"></div>
+
+        <p id="message"></p>
+
+        <button id="nextBtn" style="display: none;">
+            NEXT LEVEL →
+        </button>
+
+    </div>
+
+    <script>
+        
+const symbols = ["🟢", "🔵", "🟡", "🔴", "🟣", "🟠"];
+
+let memorySequence = [];
+
+for (let i = 0; i < 4; i++) {
+
+    const randomIndex =
+        Math.floor(Math.random() * symbols.length);
+
+    memorySequence.push(symbols[randomIndex]);
+}
+
+const sequence =
+    document.getElementById("sequence");
+
+sequence.textContent =
+    memorySequence.join(" ");
+
+setTimeout(function() {
+
+    sequence.textContent = "❓ ❓ ❓ ❓";
+
+    document.getElementById("status").textContent =
+        "Now reproduce the sequence!";
+
+}, 3000);
+
+const buttonsContainer =
+    document.getElementById("buttons");
+
+symbols.forEach(function(symbol) {
+
+    const button = document.createElement("button");
+
+    button.textContent = symbol;
+
+    button.classList.add("memory-button");
+
+    buttonsContainer.appendChild(button);
+
+});
+
+
+let playerSequence = [];
+
+
+const memoryButtons =
+    document.querySelectorAll(".memory-button");
+
+memoryButtons.forEach(function(button) {
+
+    button.addEventListener("click", function() {
+
+        
+        if (playerSequence.length >= memorySequence.length) {
+            return;
+        }
+
+        const selectedSymbol =
+            button.textContent;
+
+        playerSequence.push(selectedSymbol);
+
+        console.log(playerSequence);
+
+        if (playerSequence.length === memorySequence.length) {
+
+            const isCorrect =
+                playerSequence.every(function(symbol, index) {
+
+                    return symbol === memorySequence[index];
+
+                });
+
+
+            if (isCorrect) {
+
+                document.getElementById("message").textContent =
+                    "🎉 Perfect memory! +300 points";
+
+                let score =
+                    Number(localStorage.getItem("score")) || 0;
+
+                score += 300;
+
+                localStorage.setItem("score", score);
+
+                document.getElementById("nextBtn").style.display =
+                    "inline-block";
+
+            } else {
+
+                document.getElementById("message").textContent =
+                    "❌ Wrong sequence!";
+
+            }
+
+        }
+
+    });
+
+});
+if (playerSequence.length === memorySequence.length) {
+
+    const isCorrect =
+        playerSequence.every(function(symbol, index) {
+
+            return symbol === memorySequence[index];
+
+        });
+
+
+    if (isCorrect) {
+
+        document.getElementById("message").textContent =
+            "🎉 Perfect memory! +300 points";
+
+        let score =
+            Number(localStorage.getItem("score")) || 0;
+
+        score += 300;
+
+        localStorage.setItem("score", score);
+
+        document.getElementById("nextBtn").style.display =
+            "inline-block";
+
+    } else {
+
+        document.getElementById("message").textContent =
+            "❌ Wrong sequence! Try again.";
+
+    }
+
+}
+
+document.getElementById("nextBtn").addEventListener("click", function() {
+
+    window.location.href = "level5.html";
+
+});
+
+let endTime =
+    localStorage.getItem("escapeEndTime");
+
+
+if (!endTime) {
+
+    endTime =
+        Date.now() + (3 * 60 * 1000);
+
+    localStorage.setItem(
+        "escapeEndTime",
+        endTime
+    );
+
+}
+const timer =
+    setInterval(function() {
+
+        const remaining =
+            Number(endTime) - Date.now();
+
+
+        if (remaining <= 0) {
+
+            clearInterval(timer);
+
+            document.getElementById("timer").textContent =
+                "00:00";
+
+            localStorage.removeItem(
+                "escapeEndTime"
+            );
+
+            alert("⏰ Time's up! Game Over!");
+
+            window.location.href =
+                "index.html";
+
+            return;
+
+        }
+
+
+        const minutes =
+            Math.floor(
+                remaining / 60000
+            );
+
+
+        const seconds =
+            Math.floor(
+                (remaining % 60000) / 1000
+            );
+
+
+        document.getElementById("timer").textContent =
+            String(minutes).padStart(2, "0") +
+            ":" +
+            String(seconds).padStart(2, "0");
+
+
+    }, 1000);
+
+    </script>
+
+</body>
+
+</html>
